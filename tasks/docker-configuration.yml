@@ -1,0 +1,71 @@
+---
+# systemd service configuration uses EnvironmentFile (docker and docker-network)
+- name: Local vars for systemd installs
+  set_fact:
+    docker_config_net: "{{ docker_config_dir }}/docker-network"
+
+- name: Verify docker config files exists
+  file:
+    path: "{{ docker_config_dir }}/{{ item }}"
+    state: touch
+  changed_when: false
+  with_items:
+    - docker
+    - docker-network
+
+- name: HACK | Overwrite default docker config
+  template:
+    src: "docker"
+    dest: "{{ docker_config_dir }}/docker"
+    mode: 0644
+
+- name: Turn down docker logging
+  replace:
+    dest: "{{ docker_config_dir }}/docker"
+    regexp: '--log-level=\w*'
+    replace: "--log-level=warn"
+  notify:
+    - restart docker
+
+- name: Install http_proxy into docker(-network)
+  lineinfile:
+    dest: "{{ docker_config_net }}"
+    regexp: "^http_proxy="
+    line: "http_proxy={{ http_proxy }}"
+  when: http_proxy is defined
+  notify:
+    - restart docker
+
+- name: Install https_proxy into docker(-network)
+  lineinfile:
+    dest: "{{ docker_config_net }}"
+    regexp: "^https_proxy="
+    line: "https_proxy={{ https_proxy }}"
+  when: https_proxy is defined
+  notify:
+    - restart docker
+
+- name: Install no-proxy into docker(-network)
+  lineinfile:
+    dest: "{{ docker_config_net }}"
+    regexp: "^no_proxy="
+    line: "no_proxy={{ no_proxy }}"
+  when: no_proxy is defined
+  notify:
+    - restart docker
+
+- name: Add any insecure registrys to docker config
+  lineinfile:
+    dest: "{{ docker_config_dir }}/docker"
+    regexp: "^INSECURE_REGISTRY="
+    line: "INSECURE_REGISTRY=\"{% for reg in insecure_registrys %}--insecure-registry={{ reg }} {% endfor %}\""
+  when: insecure_registrys is defined and insecure_registrys > 0
+  notify:
+    - restart docker
+
+- name: Enable Docker
+  service:
+    name: docker
+    enabled: yes
+  notify:
+    - start docker
