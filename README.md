@@ -1,6 +1,8 @@
 ansible-docker
 =========
 
+[![Build Status](https://travis-ci.org/galexrt/ansible-docker.svg?branch=master)](https://travis-ci.org/galexrt/ansible-docker)
+
 This is a modified version of the Docker Ansible Kubernetse deployment role from [kubernetes/contrib](https://github.com/kubernetes/contrib).
 The role installs and configures Docker for you.
 
