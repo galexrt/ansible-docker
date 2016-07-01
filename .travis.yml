@@ -22,7 +22,7 @@ install:
   # Create ansible.cfg with correct roles_path
   - printf '[defaults]\nroles_path=../' >ansible.cfg
 
-  - git clone https://github.com/galexrt/ansible-common-facts.git /home/travis/build/galexrt/ansible-docker/tests/roles/common-facts
+  - git clone https://github.com/galexrt/ansible-common-facts.git /home/travis/build/galexrt/ansible-docker/tests/roles/galexrt.common-facts
 
 script:
   # Basic role syntax check
