@@ -16,8 +16,11 @@
   when: ansible_distribution == "Ubuntu"
 
 - include: generic-install.yml
-  when: ansible_distribution != "Debian" and ansible_distribution != "Ubuntu"
+  when: ansible_distribution != "Debian" and ansible_distribution != "Ubuntu" and not is_coreos
 
-- include: docker-comfiguration.yml
+- include: coreos.yml
+  when: is_coreos
 
-- include: cleanup-cronjob.yml
+- include: configuration.yml
+
+- include: cronjob-cleanup.yml

@@ -17,18 +17,20 @@
     - docker start service
 
 - name: stop docker
-  service: name=docker state=stopped
+  service:
+    name: docker
+    state: stopped
   when: '"docker0" in ansible_interfaces'
 
 - name: delete docker0
   command: ip link delete docker0
   when: '"docker0" in ansible_interfaces'
 
-  # TODO: works only on default installation...
-- name: docker graph driver 
+  # TODO: work only on default installation...
+- name: docker graph driver
   command: findmnt -no FSTYPE -T /var/lib/docker
   register: docker_driver
-  ignore_errors: true
+  ignore_errors: True
   changed_when: false
 
   # TODO: fail if no --selinux-enabled in 'OPTIONS'
