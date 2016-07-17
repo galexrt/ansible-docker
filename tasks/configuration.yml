@@ -35,11 +35,19 @@
     - restart docker
   when: docker_use_upstart
 
+- name: Set Docker storage driver
+  lineinfile:
+    dest: "{{ docker_config_dir }}/docker"
+    regexp: "^OPTIONS=\"(.*)\""
+    line: OPTIONS="--storage-driver={{ docker_storage_driver }} \1"
+  notify:
+  - restart docker
+
 - name: Install http_proxy into docker(-network)
   lineinfile:
     dest: "{{ docker_config_net }}"
     regexp: "^{{ docker_env_export }}http_proxy="
-    line: "{{docker_env_export}}http_proxy={{ http_proxy }}"
+    line: "{{ docker_env_export }}http_proxy={{ http_proxy }}"
   when: http_proxy is defined
   notify:
     - restart docker
@@ -66,8 +74,8 @@
   lineinfile:
     dest: "{{ docker_config_dir }}/docker"
     regexp: "^INSECURE_REGISTRY="
-    line: INSECURE_REGISTRY="{% for reg in insecure_registrys %}--insecure-registry={{ reg }} {% endfor %}"
-  when: insecure_registrys is defined and insecure_registrys > 0
+    line: INSECURE_REGISTRY="{% for reg in docker_insecure_registrys %}--insecure-registry={{ reg }} {% endfor %}"
+  when: docker_insecure_registrys is defined and docker_insecure_registrys > 0
   notify:
     - restart docker
 
