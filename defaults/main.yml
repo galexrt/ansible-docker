@@ -2,6 +2,7 @@ no_proxy: "localhost,127.0.0.0/8,::1,/var/run/docker.sock"
 docker_config_dir: "/etc/sysconfig"
 
 docker_storage_driver: "devicemapper"
+docker_log_driver: "journald"
 docker_insecure_registrys: []
 
 docker_cronjob_container_cleanup: true

@@ -35,11 +35,19 @@
     - restart docker
   when: docker_use_upstart
 
-- name: Set Docker storage driver
-  lineinfile:
+- name: Set docker storage driver
+  replace:
     dest: "{{ docker_config_dir }}/docker"
-    regexp: "^OPTIONS=\"(.*)\""
-    line: OPTIONS="--storage-driver={{ docker_storage_driver }} \1"
+    regexp: ^OPTIONS=['"](?!.*--storage-driver={{ docker_storage_driver }}.*|-s {{ docker_storage_driver }}.*)(.*)['"]
+    replace: OPTIONS='--storage-driver={{ docker_storage_driver }} \1'
+  notify:
+  - restart docker
+
+- name: Set docker log driver
+  replace:
+    dest: "{{ docker_config_dir }}/docker"
+    regexp: ^OPTIONS=['"](?!.*--storage-driver={{ docker_log_driver }}.*|-s {{ docker_log_driver }}.*)(.*)['"]
+    replace: OPTIONS='--log-driver={{ docker_log_driver }} \1'
   notify:
   - restart docker
 
