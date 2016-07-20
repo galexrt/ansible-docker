@@ -29,25 +29,20 @@
 - name: Turn down docker logging
   lineinfile:
     dest: "{{ docker_config_dir }}/docker"
-    regexp: "^OPTIONS="
-    line: OPTIONS="--selinux-enabled --log-level=warn"
+    regexp: ^OPTIONS=['"](.*)(?!.*--=log-level=warn)(.*)['"]
+    line: OPTIONS='--log-level=warn  \1 \2'
   notify:
     - restart docker
   when: docker_use_upstart
 
-- name: Set docker storage driver
+- name: Set docker options
   replace:
     dest: "{{ docker_config_dir }}/docker"
-    regexp: ^OPTIONS=['"](?!.*--storage-driver={{ docker_storage_driver }}.*|-s {{ docker_storage_driver }}.*)(.*)['"]
-    replace: OPTIONS='--storage-driver={{ docker_storage_driver }} \1'
-  notify:
-  - restart docker
-
-- name: Set docker log driver
-  replace:
-    dest: "{{ docker_config_dir }}/docker"
-    regexp: ^OPTIONS=['"](?!.*--storage-driver={{ docker_log_driver }}.*|-s {{ docker_log_driver }}.*)(.*)['"]
-    replace: OPTIONS='--log-driver={{ docker_log_driver }} \1'
+    regexp: ^OPTIONS=['"](.*)(?!.*--={{ item.name }}={{ item.value }})(.*)['"]
+    replace: OPTIONS='--{{ item.name }}{% if item.value is defined %}={{ item.value }}{% endif %} \1 \2'
+  with_items:
+    - "{{ docker_options }}"
+  when: (item.only_on_hosts is not defined and item.not_on_hosts is not defined) or (item.only_on_hosts is defined and item.not_on_hosts is defined) or (item.only_on_hosts is defined and inventory_hostname in item.only_on_hosts) or (item.not_on_hosts is defined and inventory_hostname not in item.not_on_hosts)
   notify:
   - restart docker
 
