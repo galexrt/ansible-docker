@@ -36,13 +36,9 @@
   when: docker_use_upstart
 
 - name: Set docker options
-  replace:
+  template:
+    src: "docker.j2"
     dest: "{{ docker_config_dir }}/docker"
-    regexp: ^OPTIONS=['"](.*)(?!.*--={{ item.name }}={{ item.value }})(.*)['"]
-    replace: OPTIONS='--{{ item.name }}{% if item.value is defined %}={{ item.value }}{% endif %} \1 \2'
-  with_items:
-    - "{{ docker_options }}"
-  when: (item.only_on_hosts is not defined and item.not_on_hosts is not defined) or (item.only_on_hosts is defined and item.not_on_hosts is defined) or (item.only_on_hosts is defined and inventory_hostname in item.only_on_hosts) or (item.not_on_hosts is defined and inventory_hostname not in item.not_on_hosts)
   notify:
   - restart docker
 
@@ -70,15 +66,6 @@
     regexp: "^{{ docker_env_export }}no_proxy="
     line: "{{ docker_env_export }}no_proxy={{ no_proxy }}"
   when: no_proxy is defined
-  notify:
-    - restart docker
-
-- name: Add any insecure registrys to docker config
-  lineinfile:
-    dest: "{{ docker_config_dir }}/docker"
-    regexp: "^INSECURE_REGISTRY="
-    line: INSECURE_REGISTRY="{% for reg in docker_insecure_registrys %}--insecure-registry={{ reg }} {% endfor %}"
-  when: docker_insecure_registrys is defined and docker_insecure_registrys > 0
   notify:
     - restart docker
 
