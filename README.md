@@ -19,7 +19,7 @@ For available variables take a look at the `defaults/main.yml`.
 Dependencies
 ------------
 
-
+None.
 
 Example Playbook
 ----------------
