@@ -19,6 +19,7 @@
     src: "docker.socket.j2"
     dest: "{{ systemd_unit_path }}/docker.socket"
   notify:
+  - reload systemd
   - restart docker
 
 - name: Create Docker service
@@ -26,4 +27,5 @@
     src: "docker.service.j2"
     dest: "{{ systemd_unit_path }}/docker.service"
   notify:
+  - reload systemd
   - restart docker
