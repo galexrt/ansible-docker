@@ -1,9 +1,11 @@
 no_proxy: "localhost,127.0.0.0/8,::1,/var/run/docker.sock"
 docker_config_dir: "/etc/sysconfig"
 
+docker_use_docker_pkg_repos: false
+
 docker_options: []
 
 docker_insecure_registrys: []
 
-docker_cronjob_container_cleanup: true
-docker_cronjob_image_cleanup: true
+docker_cronjob_container_cleanup: false
+docker_cronjob_image_cleanup: false

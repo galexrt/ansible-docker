@@ -1,1 +1,1 @@
-deb https://apt.dockerproject.org/repo {{ ansible_distribution | lower }}-{{ ansible_distribution_release }} main
+deb {% if docker_repo_arch %}[arch={{ docker_repo_arch | join(',') }}]{% endif%}https://apt.dockerproject.org/repo {{ ansible_distribution | lower }}-{{ ansible_distribution_release }} main
