@@ -1,18 +1,1 @@
-# /etc/sysconfig/docker
-
-# Modify these options if you want to change the way the docker daemon runs
-{{ docker_env_export }}OPTIONS='{% for item in docker_options %}{% if (item.only_on_hosts is not defined and item.not_on_hosts is not defined) or (item.only_on_hosts is defined and item.not_on_hosts is defined) or (item.only_on_hosts is defined and inventory_hostname in item.only_on_hosts) or (item.not_on_hosts is defined and inventory_hostname not in item.not_on_hosts) %}--{{ item.name }}{% if item.value is defined %}={{ item.value }}{% endif %}{% if not loop.last %} {% endif %}{% endif %}{% endfor %}'
-{{ docker_env_export }}DOCKER_CERT_PATH='/etc/docker'
-
-{% if docker_insecure_registrys is defined and docker_insecure_registrys > 0 %}
-# Enable insecure registry communication by appending the registry URL
-# to the INSECURE_REGISTRY variable below and uncommenting it
-{{ docker_env_export }}INSECURE_REGISTRY='{% for reg in docker_insecure_registrys %}--insecure-registry={{ reg }} {% endfor %}'
-{% endif %}
-
-{% if docker_tmpdir is defined %}
-# {{ docker_env_export }}DOCKER_TMPDIR=/var/tmp
-{% endif %}
-{% if docker_logrotate is defined %}
-# {{ docker_env_export }}LOGROTATE={{ docker_logrotate }}
-{% endif %}
+OPTIONS="{% for item in docker_options %}{% if (item.only_on_hosts is not defined and item.not_on_hosts is not defined) or (item.only_on_hosts is defined and item.not_on_hosts is defined) or (item.only_on_hosts is defined and inventory_hostname in item.only_on_hosts) or (item.not_on_hosts is defined and inventory_hostname not in item.not_on_hosts) %}--{{ item.name }}{% if item.value is defined %}={{ item.value }}{% endif %}{% if not loop.last %} {% endif %}{% endif %}{% endfor %}"

@@ -1,6 +1,10 @@
 no_proxy: "localhost,127.0.0.0/8,::1,/var/run/docker.sock"
 docker_config_dir: "/etc/sysconfig"
 
+docker_socket_path: "/var/run/docker.sock"
+dockerd_path: "/usr/bin/dockerd"
+systemd_unit_path: "/usr/lib/systemd/system"
+
 docker_options: []
 
 docker_insecure_registrys: []

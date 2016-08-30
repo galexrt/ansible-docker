@@ -1,7 +1,4 @@
 ---
-- name: Install GPG key
-  command: apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 {% if http_proxy is defined -%}--keyserver-options http-proxy={{ http_proxy }} {% endif -%} --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
-
 - name: Configure yum repository
   template:
     src: "docker.repo.j2"

@@ -13,3 +13,17 @@
 
 - include: coreos.yml
   when: is_coreos
+
+- name: Create Docker socket service
+  template:
+    src: "docker.socket.j2"
+    dest: "{{ systemd_unit_path }}/docker.socket"
+  notify:
+  - restart docker
+
+- name: Create Docker service
+  template:
+    src: "docker.service.j2"
+    dest: "{{ systemd_unit_path }}/docker.service"
+  notify:
+  - restart docker

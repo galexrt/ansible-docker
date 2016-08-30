@@ -7,6 +7,7 @@
   notify:
     - stop docker
     - delete docker0
+    - enable docker socket
     - start docker
 
 - name: start docker
@@ -45,3 +46,9 @@
   service:
     name: docker
     state: started
+
+- name: enable docker socket
+  service:
+    name: docker
+    state: started
+    enabled: yes
