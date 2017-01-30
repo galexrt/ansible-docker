@@ -1,18 +1,21 @@
 ---
-- include: repo-deb.yml
-  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+- include: debian-install.yml
+  when: ansible_distribution == "Debian" and docker_source_type == "package-manager"
 
-- include: repo-rhel.yml
-  when: ansible_distribution != "Debian" and ansible_distribution != "Ubuntu" and not is_coreos
+- include: apt-docker-install.yml
+  when: ansible_distribution == "Ubuntu" and docker_source_type == "package-manager"
 
-- name: Install/Update docker-engine package
-  action: "{{ ansible_pkg_mgr }}"
-  args:
-    name: docker-engine
-    state: latest
+- include: generic-install.yml
+  when: ansible_distribution != "Debian" and ansible_distribution != "Ubuntu" and not is_coreos and docker_source_type == "package-manager"
 
 - include: coreos.yml
   when: is_coreos
+
+- include: custom-repo-install.yml
+  when: docker_source_type == "custom-repository"
+
+- include: install-rpms.yml
+  when: docker_source_type == "distribution-rpm"
 
 - name: Create Docker socket service
   template:
