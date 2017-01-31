@@ -58,9 +58,10 @@
   lineinfile:
     dest: "{{ docker_config_dir }}/docker"
     regexp: "^OPTIONS=[\"']?(.*)[\"']?$"
-    replace: "OPTIONS=\"\1{% if docker_args|length > 0 %} {{ docker_args|join(' ') }}{% endif %}\""
+    replace: OPTIONS="\1{% if docker_args|length > 0 %} {{ docker_args|join(' ') }}{% endif %}"
   notify:
     - restart docker
+  tags: configure
 
 - name: Install http_proxy into docker(-network)
   lineinfile:
