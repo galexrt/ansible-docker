@@ -10,7 +10,6 @@
   notify:
     - stop docker
     - delete docker0
-    - enable docker service
     - start docker
 
 - name: start docker
@@ -49,9 +48,3 @@
   service:
     name: docker
     state: started
-
-- name: enable docker service
-  service:
-    name: docker
-    enabled: yes
-
