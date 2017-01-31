@@ -19,6 +19,5 @@ docker_rpms:
 - docker
 
 docker_args: []
-
-docker_cronjob_container_cleanup: false
-docker_cronjob_image_cleanup: false
+#  - --live-restore
+#  - -s overlay2

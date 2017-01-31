@@ -15,6 +15,12 @@ Role Variables
 --------------
 
 For available variables take a look at the `defaults/main.yml`.
+```
+[...]
+docker_args:
+  - --live-restore
+  - -s overlay2
+```
 
 Dependencies
 ------------
@@ -34,7 +40,7 @@ An example playbook on how to use this role:
 License
 -------
 
-Apache 2.0 License
+Apache 2.0
 
 Author Information
 ------------------
