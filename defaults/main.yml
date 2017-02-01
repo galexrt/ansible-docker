@@ -19,5 +19,4 @@ docker_rpms:
 - docker
 
 docker_args: []
-#  - --live-restore
 #  - -s overlay2

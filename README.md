@@ -18,7 +18,6 @@ For available variables take a look at the `defaults/main.yml`.
 ```
 [...]
 docker_args:
-  - --live-restore
   - -s overlay2
 ```
 
