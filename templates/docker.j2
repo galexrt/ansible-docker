@@ -1,1 +1,0 @@
-OPTIONS="{% for item in docker_args %}--{{ item.name }}{% if item.value is defined %}={{ item.value }}{% endif %}{% if not loop.last %} {% endif %}{% endif %}{% endfor %}"
