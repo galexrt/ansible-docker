@@ -46,20 +46,33 @@
 
 - name: Turn down docker logging
   set_fact:
-    docker_args: "{{ docker_args + [{'name': '--selinux-enabled'}, {'name': '--log-level', 'value': 'warn'}] }}"
+    docker_args: "{{ docker_args + ['--log-level=warn'] }}"
   when: docker_use_upstart
   tags: configure
 
-- name: Set/Add docker args to OPTIONS
-  replace:
+- name: Add selinux-enabled option for selinux enabled systems
+  set_fact:
+    docker_args: "{{ docker_args + ['--selinux-enabled'] }}"
+  when: ansible_selinux.status is defined and ansible_selinux.status != "disabled"
+  tags: configure
+
+- name: Set docker args in docker config
+  lineinfile:
     dest: "{{ docker_config_dir }}/docker"
-    regexp: "^OPTIONS=[\"']+(((?!{{ item.name }}{% if item.value is defined %}{{ item.value }}{% endif %}).)*)[\"']+$"
-    replace: 'OPTIONS="\1 {{ item.name }} {% if item.value is defined %}{{ item.value }}{% endif %}"'
-  with_items:
-    - "{{ docker_args }}"
+    regexp: "^OPTIONS="
+    line: 'OPTIONS="{% for arg in docker_args %}{{ arg }}{% if not loop.last %} {% endif %}{% endfor %}"'
   notify:
     - restart docker
   tags: configure
+
+- name: Disable docker storage options
+  lineinfile:
+    path: "{{ docker_config_dir }}/docker-storage-setup"
+    regexp: "^STORAGE_DRIVER="
+    line: "STORAGE_DRIVER="
+  notify:
+    - restart docker
+  when: docker_disable_storage_setup
 
 - name: Install http_proxy into docker(-network)
   lineinfile:

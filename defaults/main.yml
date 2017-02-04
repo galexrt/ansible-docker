@@ -18,13 +18,8 @@ docker_rpms:
 - docker-forward-journald
 - docker
 
+docker_disable_storage_setup: true
+
 docker_args: []
-#  - name: storage-driver
-#    value: "overlay2"
-#  - name: log-driver
-#    value: "journald"
-#  - name: selinux-enabled
-#  - name: iptables
-#    value: "false"
-#  - name: ip-masq
-#    value: "false"
+#  - --storage-driver overlay2
+#  - --selinux-enabled
