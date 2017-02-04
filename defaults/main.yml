@@ -19,4 +19,12 @@ docker_rpms:
 - docker
 
 docker_args: []
-#  - -s overlay2
+#  - name: storage-driver
+#    value: "overlay2"
+#  - name: log-driver
+#    value: "journald"
+#  - name: selinux-enabled
+#  - name: iptables
+#    value: "false"
+#  - name: ip-masq
+#    value: "false"
