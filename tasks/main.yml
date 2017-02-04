@@ -45,20 +45,18 @@
   tags: install
 
 - name: Turn down docker logging
-  lineinfile:
-    dest: "{{ docker_config_dir }}/docker"
-    regexp: "^OPTIONS="
-    line: "OPTIONS=\"--selinux-enabled --log-level=warn\""
-  notify:
-    - restart docker
+  set_fact:
+    docker_args: "{{ docker_args + ['--selinux-enabled', '--log-level=warn'] }}"
   when: docker_use_upstart
   tags: configure
 
-- name: Add docker_args to OPTIONS
-  lineinfile:
+- name: Set/Add docker args to OPTIONS
+  replace:
     dest: "{{ docker_config_dir }}/docker"
-    regexp: "^OPTIONS=[\"']?(.*)[\"']?$"
-    replace: OPTIONS="\1{% if docker_args|length > 0 %} {{ docker_args|join(' ') }}{% endif %}"
+    regexp: "^OPTIONS=[\"']+(((?!{{ item }}).)*)[\"']+$"
+    replace: 'OPTIONS="\1 {{ item }}"'
+  with_items:
+    - "{{ docker_args }}"
   notify:
     - restart docker
   tags: configure
