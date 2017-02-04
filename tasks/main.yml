@@ -67,7 +67,7 @@
 
 - name: Disable docker storage options
   lineinfile:
-    path: "{{ docker_config_dir }}/docker-storage-setup"
+    dest: "{{ docker_config_dir }}/docker-storage-setup"
     regexp: "^STORAGE_DRIVER="
     line: "STORAGE_DRIVER="
   notify:
