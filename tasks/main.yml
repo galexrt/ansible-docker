@@ -74,6 +74,14 @@
     - restart docker
   when: docker_disable_storage_setup
 
+- name: Removed docker storage options file
+  file:
+    state: absent
+    path: "{{ docker_config_dir }}/docker-storage"
+  notify:
+    - restart docker
+  when: docker_disable_storage_setup
+
 - name: Install http_proxy into docker(-network)
   lineinfile:
     dest: "{{ docker_config_net }}"
