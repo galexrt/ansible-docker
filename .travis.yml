@@ -27,7 +27,7 @@ install:
   - "echo '- hosts: localhost' >>tests/test.yml"
   - "echo '  remote_user: root' >>tests/test.yml"
   - "echo '  roles:' >>tests/test.yml"
-  - "echo '    - '\"$(basename '$TRAVIS_BUILD_DIR')\"'' >>tests/test.yml"
+  - "echo '    - '\"$(basename \"$TRAVIS_BUILD_DIR\")\"'' >>tests/test.yml"
 
 script:
   # Basic role syntax check

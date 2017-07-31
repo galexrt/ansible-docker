@@ -10,6 +10,11 @@ before_script:
   - pip install ansible
   - ansible --version
   - printf '[defaults]\nroles_path=../' >ansible.cfg
+  - echo '---' >tests/test.yml
+  - "echo '- hosts: localhost' >>tests/test.yml"
+  - "echo '  remote_user: root' >>tests/test.yml"
+  - "echo '  roles:' >>tests/test.yml"
+  - "echo '    - '\"$(basename \"$CI_PROJECT_DIR\")\"'' >>tests/test.yml"
 
 stages:
   - test
